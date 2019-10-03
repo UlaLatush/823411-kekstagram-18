@@ -74,13 +74,13 @@ for (var j = 0; j < photoData.length; j++) {
 
 picturesElement.appendChild(fragment);
 
-//показываем блок с классом big-picture
+// показываем блок с классом big-picture
 var bigPic = document.querySelector('.big-picture');
 bigPic.classList.remove('hidden');
 
 
-//делаем функцию, которая наполняет большие фотки???
-var renderBiggerPhoto = function (i) {
+// делаем функцию, которая наполняет большие фотки???
+var renderBiggerPhoto = function (b) {
   var iPhoto = photoData[i];
   bigPic.querySelector('.social__comment-count').textContent = iPhoto.comments.length;
   bigPic.querySelector('.big-picture__img').setAttribute('src', iPhoto.url);
