@@ -73,3 +73,21 @@ for (var j = 0; j < photoData.length; j++) {
 }
 
 picturesElement.appendChild(fragment);
+
+//показываем блок с классом big-picture
+var bigPic = document.querySelector('.big-picture');
+bigPic.classList.remove('hidden');
+
+
+//делаем функцию, которая наполняет большие фотки???
+var renderBiggerPhoto = function (i) {
+  var iPhoto = photoData[i];
+  bigPic.querySelector('.social__comment-count').textContent = iPhoto.comments.length;
+  bigPic.querySelector('.big-picture__img').setAttribute('src', iPhoto.url);
+  bigPic.querySelector('.social__likes').textContent = iPhoto.likes;
+};
+
+renderBiggerPhoto(0);
+
+bigPic.querySelector('.social__comment-count').classList.add('visually-hidden');
+bigPic.querySelector('.comments-loader').classList.add('visually-hidden');
