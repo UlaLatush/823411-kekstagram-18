@@ -15,6 +15,17 @@ var ALL_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+var ESC_CODE = 27;
+
+var SCALE_DEFAULT = 100;
+var SCALE_DIRECTION_DOWN = 'down';
+var SCALE_DIRECTION_UP = 'up';
+var SCALE_STEP = 25;
+var SCALE_MIN = 25;
+var SCALE_MAX = 100;
+var FILTER_STYLE_PREFIX = 'effects__preview--';
+var FILTER_DEFAULT = 'none';
+
 // Функция возвращает рандомное целое число между min и max
 function getRandomInt(min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -76,7 +87,7 @@ picturesElement.appendChild(fragment);
 
 // показываем блок с классом big-picture
 var bigPic = document.querySelector('.big-picture');
-bigPic.classList.remove('hidden');
+//bigPic.classList.remove('hidden');
 
 
 // делаем функцию, которая наполняет большие фотки
@@ -91,3 +102,102 @@ renderBiggerPhoto(0);
 
 bigPic.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPic.querySelector('.comments-loader').classList.add('visually-hidden');
+
+var openPhotoEditor = function (event) {
+  document.querySelector('.img-upload__overlay').classList.remove('hidden');
+};
+
+var closePhotoEditor = function () {
+  document.querySelector('.img-upload__overlay').classList.add('hidden');
+}
+
+document.querySelector('#upload-file').addEventListener('change', openPhotoEditor);
+
+// close editor when cancel button is pressed
+document.querySelector('#upload-cancel').addEventListener('click', closePhotoEditor);
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closePhotoEditor();
+  }
+});
+
+var scalePicture = function (direction) {
+  var desiredScale = 0;
+  var scale = document.querySelector('.scale__control--value');
+  var currentScale = parseInt(scale.value.replace('%', ''), 10);
+
+  if (direction === SCALE_DIRECTION_DOWN) {
+    desiredScale = currentScale - SCALE_STEP;
+  } else if (direction === SCALE_DIRECTION_UP) {
+    desiredScale = currentScale + SCALE_STEP;
+  }
+
+  if (desiredScale >= SCALE_MIN && desiredScale <= SCALE_MAX) {
+    resizePicture(desiredScale);
+  }
+};
+// change scale
+document.querySelector('.scale__control--smaller').addEventListener('click', function () {
+  scalePicture(SCALE_DIRECTION_DOWN);
+});
+document.querySelector('.scale__control--bigger').addEventListener('click', function () {
+  scalePicture(SCALE_DIRECTION_UP);
+});
+
+// set picture scale
+var resizePicture = function (scale) {
+  document.querySelector('.scale__control--value').value = scale + '%';
+  document.querySelector('.img-upload__preview').style.transform = 'scale(' + scale / 100 + ')';
+};
+
+
+// Validation
+(function () {
+
+  var TAG_NOT_UNIQUE_MSG = 'Tag {t} are not unique!';
+  var TAG_WRONG_FORMAT = 'Tag {t} should start with # symbol!';
+  var TAG_IS_TOO_SHORT = 'Tag {t} is to short!';
+  var TAG_MIN_LEN = 1;
+  var TAG_IS_TO_LONG = 'Tag {t} is to long!';
+  var TAG_MAX_LEN = 20;
+  var TAG_MAX_AMOUNT = 5;
+  var TAG_AMOUNT_IS_TOO_MUCH = 'Total amount of tags more than ' + TAG_MAX_AMOUNT;
+
+  window.validateTags = function (tags) {
+
+    var arr = tags.split(' ');
+    var uniques = [];
+    var errors = '';
+
+    for (var a = 0; a < arr.length; a++) {
+
+      var tag = arr[a];
+      errors = errors.length > 0 ? errors.concat(' ') : errors.concat('');
+
+      if (uniques.includes(tag.toLowerCase())) {
+        errors = errors.concat(TAG_NOT_UNIQUE_MSG.replace('{t}', tag));
+      }
+      uniques.push(tag.toLowerCase());
+
+      if (!tag.startsWith('#')) {
+        errors = errors.concat(TAG_WRONG_FORMAT.replace('{t}', tag));
+      }
+
+      if (tag.length <= TAG_MIN_LEN) {
+        errors = errors.concat(TAG_IS_TOO_SHORT.replace('{t}', tag));
+      }
+
+      if (tag.length > TAG_MAX_LEN) {
+        errors = errors.concat(TAG_IS_TO_LONG.replace('{t}', tag));
+      }
+    }
+
+    if (errors.length === 0 && tags.length > TAG_MAX_AMOUNT) {
+      errors = errors.concat(TAG_AMOUNT_IS_TOO_MUCH);
+    }
+
+    return errors;
+  };
+
+})();
