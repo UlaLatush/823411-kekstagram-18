@@ -17,14 +17,13 @@ var ALL_COMMENTS = [
 
 var ESC_CODE = 27;
 
-var SCALE_DEFAULT = 100;
+
 var SCALE_DIRECTION_DOWN = 'down';
 var SCALE_DIRECTION_UP = 'up';
 var SCALE_STEP = 25;
 var SCALE_MIN = 25;
 var SCALE_MAX = 100;
-var FILTER_STYLE_PREFIX = 'effects__preview--';
-var FILTER_DEFAULT = 'none';
+
 
 // Функция возвращает рандомное целое число между min и max
 function getRandomInt(min, max) {
@@ -87,7 +86,8 @@ picturesElement.appendChild(fragment);
 
 // показываем блок с классом big-picture
 var bigPic = document.querySelector('.big-picture');
-//bigPic.classList.remove('hidden');
+
+// bigPic.classList.remove('hidden');
 
 
 // делаем функцию, которая наполняет большие фотки
@@ -103,13 +103,13 @@ renderBiggerPhoto(0);
 bigPic.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPic.querySelector('.comments-loader').classList.add('visually-hidden');
 
-var openPhotoEditor = function (event) {
+var openPhotoEditor = function () {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
 };
 
 var closePhotoEditor = function () {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
-}
+};
 
 document.querySelector('#upload-file').addEventListener('change', openPhotoEditor);
 
