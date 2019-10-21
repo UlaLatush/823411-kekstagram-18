@@ -161,13 +161,4 @@ document.addEventListener('click', function (evt) {
 // close big picture
 document.querySelector('.big-picture__cancel').addEventListener('click', window.photoViewer.close);
 
-function findPictureByUrl(url) {
-
-  for (var y = 0; y < window.photoData.length; y++) {
-    if (url.includes(window.photoData[y].url)) {
-      return window.photoData[y];
-    }
-  }
-  return null;
-}
 

@@ -10,6 +10,15 @@
     return instance;
   }
 
+  function findPictureByUrl(url) {
+
+    for (var y = 0; y < window.photoData.length; y++) {
+      if (url.includes(window.photoData[y].url)) {
+        return window.photoData[y];
+      }
+    }
+    return null;
+  }
   window.photoViewer = {
 
     open: function (url) {
