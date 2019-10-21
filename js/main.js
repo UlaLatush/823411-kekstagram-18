@@ -151,57 +151,6 @@ var resizePicture = function (scale) {
   document.querySelector('.img-upload__preview').style.transform = 'scale(' + scale / 100 + ')';
 };
 
-
-// Validation
-(function () {
-
-  var TAG_NOT_UNIQUE_MSG = 'Tag {t} are not unique!';
-  var TAG_WRONG_FORMAT = 'Tag {t} should start with # symbol!';
-  var TAG_IS_TOO_SHORT = 'Tag {t} is to short!';
-  var TAG_MIN_LEN = 1;
-  var TAG_IS_TO_LONG = 'Tag {t} is to long!';
-  var TAG_MAX_LEN = 20;
-  var TAG_MAX_AMOUNT = 5;
-  var TAG_AMOUNT_IS_TOO_MUCH = 'Total amount of tags more than ' + TAG_MAX_AMOUNT;
-
-  window.validateTags = function (tags) {
-
-    var arr = tags.split(' ');
-    var uniques = [];
-    var errors = '';
-
-    for (var a = 0; a < arr.length; a++) {
-
-      var tag = arr[a];
-      errors = errors.length > 0 ? errors.concat(' ') : errors.concat('');
-
-      if (uniques.includes(tag.toLowerCase())) {
-        errors = errors.concat(TAG_NOT_UNIQUE_MSG.replace('{t}', tag));
-      }
-      uniques.push(tag.toLowerCase());
-
-      if (!tag.startsWith('#')) {
-        errors = errors.concat(TAG_WRONG_FORMAT.replace('{t}', tag));
-      }
-
-      if (tag.length <= TAG_MIN_LEN) {
-        errors = errors.concat(TAG_IS_TOO_SHORT.replace('{t}', tag));
-      }
-
-      if (tag.length > TAG_MAX_LEN) {
-        errors = errors.concat(TAG_IS_TO_LONG.replace('{t}', tag));
-      }
-    }
-
-    if (errors.length === 0 && tags.length > TAG_MAX_AMOUNT) {
-      errors = errors.concat(TAG_AMOUNT_IS_TOO_MUCH);
-    }
-
-    return errors;
-  };
-
-})();
-
 // open big picture
 document.addEventListener('click', function (evt) {
   if (evt.srcElement.classList.contains('picture__img')) {
@@ -212,53 +161,4 @@ document.addEventListener('click', function (evt) {
 // close big picture
 document.querySelector('.big-picture__cancel').addEventListener('click', window.photoViewer.close);
 
-function findPictureByUrl(url) {
 
-  for (var y = 0; y < window.photoData.length; y++) {
-    if (url.includes(window.photoData[y].url)) {
-      return window.photoData[y];
-    }
-  }
-  return null;
-}
-
-(function () {
-
-  function createCommentElement(comment, commentTemplate) {
-    var instance = commentTemplate.cloneNode(true);
-    instance.querySelector('img').setAttribute('src', comment.avatar);
-    instance.querySelector('p').textContent = comment.message;
-    instance.querySelector('img').setAttribute('alt', comment.name);
-    return instance;
-  }
-
-  window.photoViewer = {
-
-    open: function (url) {
-
-      var picture = findPictureByUrl(url);
-      var bigPicture = document.querySelector('.big-picture');
-      bigPicture.classList.remove('hidden');
-      // fill likes, comments amount and description
-      bigPicture.querySelector('.big-picture__img').children[0].setAttribute('src', picture.url);
-      bigPicture.querySelector('.likes-count').textContent = picture.likes;
-      bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
-      bigPicture.querySelector('.social__caption').textContent = picture.description;
-      // add comment elements to page
-      var commentsContainer = bigPicture.querySelector('.social__comments');
-      var commentTemplate = commentsContainer.children[0];
-      var commentsFragment = document.createDocumentFragment();
-      for (var c = 0; c < picture.comments.length; c++) {
-        commentsFragment.appendChild(createCommentElement(picture.comments[c], commentTemplate));
-      }
-      commentsContainer.innerHTML = '';
-      commentsContainer.appendChild(commentsFragment);
-      // hide blocks
-      bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
-      bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
-    },
-    close: function () {
-      document.querySelector('.big-picture').classList.add('hidden');
-    }
-  };
-})();
