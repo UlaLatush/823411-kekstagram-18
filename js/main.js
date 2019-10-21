@@ -214,9 +214,9 @@ document.querySelector('.big-picture__cancel').addEventListener('click', window.
 
 function findPictureByUrl(url) {
 
-  for (var i = 0; i < window.photoData.length; i++) {
-    if (url.includes(window.photoData[i].url)) {
-      return window.photoData[i];
+  for (var j = 0; j < window.photoData.length; j++) {
+    if (url.includes(window.photoData[j].url)) {
+      return window.photoData[j];
     }
   }
   return null;
