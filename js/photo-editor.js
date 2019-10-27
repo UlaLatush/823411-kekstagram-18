@@ -135,4 +135,57 @@
     document.querySelector('.img-upload__overlay').classList.remove('hidden');
   };
 
+  // open editor when file is selected
+  document.querySelector('#upload-file').addEventListener('change', openPhotoEditor);
+
+  // add listeners to switch filters
+  var radios = document.querySelectorAll('.effects__radio');
+  for (var k = 0; k < radios.length; k++) {
+    radios[k].addEventListener('change', function () {
+
+      // change filter
+      changePictureStyle();
+
+      // change pin position and set default filter opacity value
+      changePinPosition(Number.MAX_SAFE_INTEGER);
+
+      // set default filter opacity
+      changeFilterOpacity();
+    });
+  }
+
+  // drag pin
+  var pin = document.querySelector('.effect-level__pin');
+  pin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startX = evt.clientX;
+
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startX - moveEvt.clientX;
+      var pinPosition = (pin.offsetLeft - shiftX);
+
+      changePinPosition(pinPosition);
+
+      startX = moveEvt.clientX;
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+
+      changeFilterOpacity();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+
 })();
