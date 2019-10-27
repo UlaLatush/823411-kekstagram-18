@@ -52,6 +52,14 @@
     }
   };
 
+  // change scale
+  document.querySelector('.scale__control--smaller').addEventListener('click', function () {
+    scalePicture(SCALE_DIRECTION_DOWN);
+  });
+  document.querySelector('.scale__control--bigger').addEventListener('click', function () {
+    scalePicture(SCALE_DIRECTION_UP);
+  });
+
   // set picture scale
   var resizePicture = function (scale) {
     document.querySelector('.scale__control--value').value = scale + '%';
