@@ -6,7 +6,7 @@
   var STATUS = 200;
 
   // send data to a server
-  window.upload = function (data, onSuccess, onError) {
+  window.upload = function (data, onSuccess) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
