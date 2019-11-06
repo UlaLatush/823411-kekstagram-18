@@ -203,7 +203,7 @@
   var closePhotoEditorWithErrorUpload = function (errorMessage) {
     closePhotoEditor();
     window.messages.showErrorDataMessage(errorMessage);
-  }
+  };
 
   // validate and send data to server
   document.querySelector('#upload-submit').addEventListener('click', function (evt) {
