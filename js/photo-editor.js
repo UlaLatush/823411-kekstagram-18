@@ -205,7 +205,7 @@
     window.messages.showErrorDataMessage(errorMessage);
   };
 
-  // validate and send data to server
+  // validate and send to server
   document.querySelector('#upload-submit').addEventListener('click', function (evt) {
 
     var tagsInput = document.querySelector('.text__hashtags');
