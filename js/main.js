@@ -15,12 +15,7 @@
       fragment.appendChild(pictureElement);
     }
     section.insertBefore(fragment, sectionUpload);
-  }, function (errorMessage) {
-    var fragmentTemplate = document.querySelector('#error').content;
-    var instance = fragmentTemplate.cloneNode(true);
-    instance.querySelector('.error__title').textContent = errorMessage;
-    section.insertBefore(instance, sectionUpload);
-  });
+  }, window.messages.showErrorDataMessage);
 
   // open big picture
   document.addEventListener('click', function (evt) {

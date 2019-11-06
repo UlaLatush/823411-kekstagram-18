@@ -164,7 +164,7 @@ main {
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 700;
   font-size: 18px;
-  line-height: auto;
+  line-height: inherit;
   text-transform: uppercase;
 
   cursor: pointer;
@@ -186,7 +186,7 @@ main {
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 700;
   font-size: 18px;
-  line-height: auto;
+  line-height: inherit;
 
   cursor: pointer;
 }
@@ -212,7 +212,6 @@ main {
   display: grid;
   grid-gap: 10px;
 
-  -ms-grid-columns: (1fr)[7];
       grid-template-columns: repeat(7, 1fr);
 }
 
@@ -222,7 +221,7 @@ main {
 }
 
 .picture__img {
-  max-width: auto;
+  max-width: inherit;
   width: 100%;
   height: auto;
 }
@@ -877,8 +876,6 @@ main {
      -ms-flex-pack: start;
    justify-content: flex-start;
 
-  -webkit-box-align: flex-start;
-     -ms-flex-align: flex-start;
         align-items: flex-start;
 
   border-bottom: 1px solid #cccccc;
@@ -1412,7 +1409,6 @@ main {
   }
 
   .pictures {
-    -ms-grid-columns: (1fr)[5];
     grid-template-columns: repeat(5, 1fr);
   }
 
@@ -1433,7 +1429,6 @@ main {
   }
 
   .pictures {
-    -ms-grid-columns: (1fr)[3];
     grid-template-columns: repeat(3, 1fr);
   }
 
