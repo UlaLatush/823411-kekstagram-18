@@ -2,19 +2,13 @@
 
 (function () {
 
-  // find initial position
-  var section = document.querySelector('.pictures');
-  var sectionUpload = document.querySelector('.img-upload');
-
   // create picture elements
   window.load(function (pictures) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      var picture = pictures[i];
-      var pictureElement = window.photoUtils.createPictureElement(picture);
-      fragment.appendChild(pictureElement);
-    }
-    section.insertBefore(fragment, sectionUpload);
+
+    // remember pictures
+    window.pictureList = pictures;
+
+    window.photoUtils.renderPictures(pictures);
   }, window.messages.showErrorDataMessage);
 
   // open big picture
