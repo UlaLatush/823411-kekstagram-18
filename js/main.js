@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEY_CODE = 27;
 
   // create picture elements
   window.load(function (pictures) {
@@ -20,4 +21,9 @@
 
   // close big picture
   document.querySelector('.big-picture__cancel').addEventListener('click', window.photoViewer.close);
+  document.addEventListener('keydown', function (evt) {
+    if (evt.which === ESC_KEY_CODE) {
+      window.photoViewer.close();
+    }
+  });
 })();
