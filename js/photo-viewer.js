@@ -45,11 +45,11 @@
     return fragment;
   }
 
-  function loadComments() {
+  function loadComments(comments) {
 
     // добавляем фрагмент с новой порцией комментариев
     var amountOfLoadedComments = socialComments.querySelectorAll('.social__comment').length;
-    var commentsPart = allComments.slice(amountOfLoadedComments, amountOfLoadedComments + MAX_COMMENTS);
+    var commentsPart = comments.slice(amountOfLoadedComments, amountOfLoadedComments + MAX_COMMENTS);
     socialComments.appendChild(createCommentsFragment(commentsPart));
 
     // выбираем все загруженные комментарии после добавления новой порции
@@ -59,10 +59,15 @@
     commentsCountOpened.textContent = amountOfAllLoadedComments;
 
     // скрыть кнопку загрузки комментариев, убрать слушателя по нажатию данной кнопки
-    if (amountOfAllLoadedComments === allComments.length) {
+    if (amountOfAllLoadedComments === comments.length) {
       loadCommentsButton.classList.add('hidden');
-      loadCommentsButton.removeEventListener('click', loadComments);
+      loadCommentsButton.removeEventListener('click', onLoadCommentsClick);
     }
+  }
+
+  // обертка для колбека
+  function onLoadCommentsClick() {
+    loadComments(allComments);
   }
 
   window.photoViewer = {
@@ -92,10 +97,10 @@
       allComments = picture.comments;
 
       // отобразить первую пачку комментариев
-      loadComments();
+      loadComments(allComments);
 
       // установить слушателя на кнопку загрузки следующей пачки комментариев
-      loadCommentsButton.addEventListener('click', loadComments);
+      loadCommentsButton.addEventListener('click', onLoadCommentsClick);
     },
     close: function () {
       loadCommentsButton.removeEventListener('click', loadComments);

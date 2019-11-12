@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEY_CODE = 27;
+  var uploadButton = document.querySelector('#upload-file');
 
   // create picture elements
   window.load(function (pictures) {
@@ -26,4 +27,6 @@
       window.photoViewer.close();
     }
   });
+
+  uploadButton.addEventListener('change', window.photoEditor.onUploadImageChange);
 })();

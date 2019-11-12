@@ -219,4 +219,16 @@
     }
   });
 
+  var onUploadImageChange = function () {
+    if (window.photoUpload.photoUpload()) {
+      openPhotoEditor();
+    } else {
+      window.popup.showErrorDataMessage('Неправильный формат изображения');
+    }
+  };
+
+  window.photoEditor = {
+    onUploadImageChange: onUploadImageChange,
+  };
+
 })();
