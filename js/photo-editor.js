@@ -14,38 +14,32 @@
   var FILTER_STYLE_PREFIX = 'effects__preview--';
   var FILTER_DEFAULT = 'none';
 
+  var photoEditor = document.querySelector('.img-upload__overlay');
+  var closeButton = document.querySelector('#upload-cancel');
+
+  // close photo-editor, add hidden and clear listeners
   var closePhotoEditor = function () {
     if (
       !document.activeElement.classList.contains('text__description')
       && !document.activeElement.classList.contains('text__hashtags')
     ) {
-      document.querySelector('.img-upload__overlay').classList.add('hidden');
+      photoEditor.classList.add('hidden');
       document.querySelector('#upload-file').value = null;
       document.querySelector('.text__hashtags').value = null;
       document.querySelector('.text__description').value = null;
+
+      // remove listeners
+      closeButton.removeEventListener('click', closePhotoEditor);
+      document.removeEventListener('keydown', closePhotoEditor);
     }
   };
-
-  // close editor when cancel button is pressed
-  document.querySelector('#upload-cancel').addEventListener('click', closePhotoEditor);
-
-  // close editor when ESC key is pressed
-  document.addEventListener('keydown', function (evt) {
-    if (evt.which === ESC_KEY_CODE) {
-      closePhotoEditor();
-    }
-  });
 
   var scalePicture = function (direction) {
     var desiredScale = 0;
     var scale = document.querySelector('.scale__control--value');
     var currentScale = parseInt(scale.value.replace('%', ''), 10);
 
-    if (direction === SCALE_DIRECTION_DOWN) {
-      desiredScale = currentScale - SCALE_STEP;
-    } else if (direction === SCALE_DIRECTION_UP) {
-      desiredScale = currentScale + SCALE_STEP;
-    }
+    desiredScale = currentScale + ((direction === SCALE_DIRECTION_DOWN) ? -SCALE_STEP : SCALE_STEP);
 
     if (desiredScale >= SCALE_MIN && desiredScale <= SCALE_MAX) {
       resizePicture(desiredScale);
@@ -140,11 +134,20 @@
     // set filter opacity
     changeFilterOpacity();
 
-    document.querySelector('.img-upload__overlay').classList.remove('hidden');
-  };
+    // open widget
+    photoEditor.classList.remove('hidden');
 
-  // open editor when file is selected
-  document.querySelector('#upload-file').addEventListener('change', openPhotoEditor);
+    // set listeners for closing widget
+    // close editor when cancel button is pressed
+    closeButton.addEventListener('click', closePhotoEditor);
+
+    // close editor when ESC key is pressed
+    document.addEventListener('keydown', function (evt) {
+      if (evt.which === ESC_KEY_CODE) {
+        closePhotoEditor();
+      }
+    });
+  };
 
   // add listeners to switch filters
   var radios = document.querySelectorAll('.effects__radio');

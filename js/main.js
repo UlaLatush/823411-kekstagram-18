@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY_CODE = 27;
-  var uploadButton = document.querySelector('#upload-file');
 
   // create picture elements
   window.load(function (pictures) {
@@ -10,7 +8,11 @@
     // remember pictures
     window.pictureList = pictures;
 
+    // render loaded pictures
     window.photoUtils.renderPictures(pictures);
+
+    // show filters
+    window.photoFilter.open();
   }, window.messages.showErrorDataMessage);
 
   // open big picture
@@ -20,13 +22,6 @@
     }
   });
 
-  // close big picture
-  document.querySelector('.big-picture__cancel').addEventListener('click', window.photoViewer.close);
-  document.addEventListener('keydown', function (evt) {
-    if (evt.which === ESC_KEY_CODE) {
-      window.photoViewer.close();
-    }
-  });
-
-  uploadButton.addEventListener('change', window.photoEditor.onUploadImageChange);
+  // open photo editor
+  document.querySelector('#upload-file').addEventListener('change', window.photoEditor.onUploadImageChange);
 })();

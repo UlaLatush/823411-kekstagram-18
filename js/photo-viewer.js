@@ -1,10 +1,12 @@
 'use strict';
 
 (function () {
+  var ESC_KEY_CODE = 27;
   var MAX_COMMENTS = 5;
   var bigPicture = document.querySelector('.big-picture');
   var socialComments = bigPicture.querySelector('.social__comments');
   var loadCommentsButton = bigPicture.querySelector('.comments-loader');
+  var closePictureButton = document.querySelector('.big-picture__cancel');
   var commentElement = socialComments.querySelector('.social__comment');
   var commentsCountElement = bigPicture.querySelector('.social__comment-count');
   var commentsCountOpened = commentsCountElement.querySelector('.comments-count-opened');
@@ -70,6 +72,25 @@
     loadComments(allComments);
   }
 
+  // закрывает большую картинку и убирает все слушателей
+  function closePhotoViewer(evt) {
+
+    if (evt.target === closePictureButton || evt.keyCode === ESC_KEY_CODE) {
+
+      // удаляет слушателя по загрузки пачки комментариев
+      loadCommentsButton.removeEventListener('click', onLoadCommentsClick);
+
+      // скрывает большую фотографию
+      bigPicture.classList.add('hidden');
+
+      // удаляет слушателя по закрытию на крестик
+      closePictureButton.removeEventListener('click', closePhotoViewer);
+
+      // удаляет слушателя по закрытию на Esc
+      document.removeEventListener('keydown', closePhotoViewer);
+    }
+  }
+
   window.photoViewer = {
 
     open: function (url) {
@@ -101,10 +122,12 @@
 
       // установить слушателя на кнопку загрузки следующей пачки комментариев
       loadCommentsButton.addEventListener('click', onLoadCommentsClick);
-    },
-    close: function () {
-      loadCommentsButton.removeEventListener('click', loadComments);
-      document.querySelector('.big-picture').classList.add('hidden');
+
+      // установить слушателя на закрытие по крестику
+      closePictureButton.addEventListener('click', closePhotoViewer);
+
+      // установить слушателя на закрытие по Esc
+      document.addEventListener('keydown', closePhotoViewer);
     }
   };
 })();
