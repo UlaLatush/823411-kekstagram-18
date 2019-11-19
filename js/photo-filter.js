@@ -25,11 +25,11 @@
     }
   };
 
-  function getRandomInt(min, max) {
+  var getRandomInt = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
-  }
+  };
 
-  function getRandomPictures() {
+  var getRandomPictures = function () {
 
     var randomPictures = [];
 
@@ -50,7 +50,7 @@
     }
 
     return randomPictures;
-  }
+  };
 
   var activeButtonToggle = function (button) {
     var activeButton = filter.querySelector('.img-filters__button--active');

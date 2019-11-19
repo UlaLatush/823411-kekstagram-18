@@ -16,22 +16,37 @@
 
   var photoEditor = document.querySelector('.img-upload__overlay');
   var closeButton = document.querySelector('#upload-cancel');
+  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
+  var scaleControlBigger = document.querySelector('.scale__control--bigger');
+  var filtersRadio = document.querySelectorAll('.effects__radio');
+  var effectLevelPin = document.querySelector('.effect-level__pin');
+  var uploadButton = document.querySelector('#upload-submit');
 
   // close photo-editor, add hidden and clear listeners
   var closePhotoEditor = function () {
-    if (
-      !document.activeElement.classList.contains('text__description')
-      && !document.activeElement.classList.contains('text__hashtags')
-    ) {
-      photoEditor.classList.add('hidden');
-      document.querySelector('#upload-file').value = null;
-      document.querySelector('.text__hashtags').value = null;
-      document.querySelector('.text__description').value = null;
 
-      // remove listeners
-      closeButton.removeEventListener('click', closePhotoEditor);
-      document.removeEventListener('keydown', closePhotoEditor);
-    }
+    // hide photo editor window
+    photoEditor.classList.add('hidden');
+
+    // set to null all fields
+    document.querySelector('#upload-file').value = null;
+    document.querySelector('.text__hashtags').value = null;
+    document.querySelector('.text__description').value = null;
+
+    // remove listeners
+    scaleControlSmaller.removeEventListener('click', scalePictureDown);
+    scaleControlBigger.removeEventListener('click', scalePictureUp);
+
+    filtersRadio.forEach(function (filter) {
+      filter.removeEventListener('change', switchFilter);
+    });
+
+    effectLevelPin.removeEventListener('mousedown', dragPin);
+
+    uploadButton.removeEventListener('click', sendPicture);
+
+    closeButton.removeEventListener('click', onClickClosePhotoEditor);
+    document.removeEventListener('keydown', onEscClosePhotoEditor);
   };
 
   var scalePicture = function (direction) {
@@ -46,13 +61,13 @@
     }
   };
 
-  // change scale
-  document.querySelector('.scale__control--smaller').addEventListener('click', function () {
+  var scalePictureDown = function () {
     scalePicture(SCALE_DIRECTION_DOWN);
-  });
-  document.querySelector('.scale__control--bigger').addEventListener('click', function () {
+  };
+
+  var scalePictureUp = function () {
     scalePicture(SCALE_DIRECTION_UP);
-  });
+  };
 
   // set picture scale
   var resizePicture = function (scale) {
@@ -105,7 +120,7 @@
 
   var changePinPosition = function (pinPosition) {
 
-    var sliderWidth = pin.parentElement.offsetWidth;
+    var sliderWidth = effectLevelPin.parentElement.offsetWidth;
 
     if (pinPosition > sliderWidth) {
       pinPosition = sliderWidth;
@@ -113,10 +128,52 @@
       pinPosition = 0;
     }
 
-    pin.style.left = pinPosition + 'px';
-    var effectLevel = Math.round(pin.offsetLeft * 100 / sliderWidth);
+    effectLevelPin.style.left = pinPosition + 'px';
+    var effectLevel = Math.round(effectLevelPin.offsetLeft * 100 / sliderWidth);
     document.querySelector('.effect-level__value').value = effectLevel;
     document.querySelector('.effect-level__depth').style.width = effectLevel + '%';
+  };
+
+  var switchFilter = function () {
+
+    // change filter
+    changePictureStyle();
+
+    // change pin position and set default filter opacity value
+    changePinPosition(Number.MAX_SAFE_INTEGER);
+
+    // set default filter opacity
+    changeFilterOpacity();
+  };
+
+  var dragPin = function (evt) {
+
+    evt.preventDefault();
+
+    var startX = evt.clientX;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startX - moveEvt.clientX;
+      var pinPosition = (effectLevelPin.offsetLeft - shiftX);
+
+      changePinPosition(pinPosition);
+
+      startX = moveEvt.clientX;
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      changeFilterOpacity();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
   var openPhotoEditor = function () {
@@ -137,66 +194,42 @@
     // open widget
     photoEditor.classList.remove('hidden');
 
+    // set listeners to scale controls
+    scaleControlSmaller.addEventListener('click', scalePictureDown);
+    scaleControlBigger.addEventListener('click', scalePictureUp);
+
+    // set listeners to filters radio
+    filtersRadio.forEach(function (filter) {
+      filter.addEventListener('change', switchFilter);
+    });
+
+    // set listeners on pin
+    effectLevelPin.addEventListener('mousedown', dragPin);
+
+    // set listeners on upload button
+    uploadButton.addEventListener('click', sendPicture);
+
     // set listeners for closing widget
     // close editor when cancel button is pressed
-    closeButton.addEventListener('click', closePhotoEditor);
+    closeButton.addEventListener('click', onClickClosePhotoEditor);
 
     // close editor when ESC key is pressed
-    document.addEventListener('keydown', function (evt) {
-      if (evt.which === ESC_KEY_CODE) {
-        closePhotoEditor();
-      }
-    });
+    document.addEventListener('keydown', onEscClosePhotoEditor);
   };
 
-  // add listeners to switch filters
-  var radios = document.querySelectorAll('.effects__radio');
-  for (var k = 0; k < radios.length; k++) {
-    radios[k].addEventListener('change', function () {
+  var onClickClosePhotoEditor = function (evt) {
+    if (evt.target === closeButton) {
+      closePhotoEditor();
+    }
+  };
 
-      // change filter
-      changePictureStyle();
-
-      // change pin position and set default filter opacity value
-      changePinPosition(Number.MAX_SAFE_INTEGER);
-
-      // set default filter opacity
-      changeFilterOpacity();
-    });
-  }
-
-  // drag pin
-  var pin = document.querySelector('.effect-level__pin');
-  pin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    var startX = evt.clientX;
-
-
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shiftX = startX - moveEvt.clientX;
-      var pinPosition = (pin.offsetLeft - shiftX);
-
-      changePinPosition(pinPosition);
-
-      startX = moveEvt.clientX;
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-
-      changeFilterOpacity();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
+  var onEscClosePhotoEditor = function (evt) {
+    if (evt.keyCode === ESC_KEY_CODE
+      && (!document.activeElement.classList.contains('text__description')
+        && !document.activeElement.classList.contains('text__hashtags'))) {
+      closePhotoEditor();
+    }
+  };
 
   var closePhotoEditorWithSuccessUpload = function () {
     closePhotoEditor();
@@ -209,8 +242,7 @@
   };
 
   // validate and send to server
-  document.querySelector('#upload-submit').addEventListener('click', function (evt) {
-
+  var sendPicture = function (evt) {
     var tagsInput = document.querySelector('.text__hashtags');
     var errors = window.validateTags(tagsInput.value);
     if (errors) {
@@ -220,7 +252,7 @@
           closePhotoEditorWithSuccessUpload, closePhotoEditorWithErrorUpload);
       evt.preventDefault();
     }
-  });
+  };
 
   var onUploadImageChange = function () {
     if (window.photoUpload.photoUpload()) {

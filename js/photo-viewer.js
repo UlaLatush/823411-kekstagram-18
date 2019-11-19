@@ -15,7 +15,7 @@
   var allComments = [];
 
 
-  function findPictureByUrl(url) {
+  var findPictureByUrl = function (url) {
 
     for (var y = 0; y < window.pictureList.length; y++) {
       if (url.includes(window.pictureList[y].url)) {
@@ -23,10 +23,10 @@
       }
     }
     return null;
-  }
+  };
 
   // создание одного DOM-элемента из объекта комментария
-  function createCommentElement(comment) {
+  var createCommentElement = function (comment) {
 
     var cloneCommentElement = commentElement.cloneNode(true);
     var pictureCommentElementImg = cloneCommentElement.querySelector('.social__picture');
@@ -36,18 +36,18 @@
     cloneCommentElement.querySelector('.social__text').textContent = comment.message;
 
     return cloneCommentElement;
-  }
+  };
 
   // создание фрагмента с заданным кол-вом комментариев
-  function createCommentsFragment(comments) {
+  var createCommentsFragment = function (comments) {
     var fragment = document.createDocumentFragment();
     comments.forEach(function (comment) {
       fragment.appendChild(createCommentElement(comment));
     });
     return fragment;
-  }
+  };
 
-  function loadComments(comments) {
+  var loadComments = function (comments) {
 
     // добавляем фрагмент с новой порцией комментариев
     var amountOfLoadedComments = socialComments.querySelectorAll('.social__comment').length;
@@ -65,15 +65,15 @@
       loadCommentsButton.classList.add('hidden');
       loadCommentsButton.removeEventListener('click', onLoadCommentsClick);
     }
-  }
+  };
 
   // обертка для колбека
-  function onLoadCommentsClick() {
+  var onLoadCommentsClick = function () {
     loadComments(allComments);
-  }
+  };
 
   // закрывает большую картинку и убирает все слушателей
-  function closePhotoViewer(evt) {
+  var closePhotoViewer = function (evt) {
 
     if (evt.target === closePictureButton || evt.keyCode === ESC_KEY_CODE) {
 
@@ -89,7 +89,7 @@
       // удаляет слушателя по закрытию на Esc
       document.removeEventListener('keydown', closePhotoViewer);
     }
-  }
+  };
 
   window.photoViewer = {
 
